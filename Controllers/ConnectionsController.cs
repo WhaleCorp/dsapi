@@ -8,7 +8,7 @@ namespace dsapi.Controllers
     public class ConnectionsController:ControllerBase
     {
         [HttpGet]
-        public async Task<IActionResult> GetAllConnected()
+        public IActionResult GetAllConnected()
         {
             Socket.CleanSoket();
             return Ok(Socket.sockets.Keys);

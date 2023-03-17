@@ -27,6 +27,7 @@ namespace dsapi.Controllers
             }
         }
 
+        [NonAction]
         private static async Task Echo(WebSocket webSocket)
         {
             var buffer = new byte[1024 * 4];
