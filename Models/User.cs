@@ -20,7 +20,7 @@ namespace dsapi.Models
         [Required,StringLength(100)]
         public string PhoneNumber { get; set; }
         [Required]
-        public int Type { get; set; }
+        public int Role { get; set; }
 
     }
 }

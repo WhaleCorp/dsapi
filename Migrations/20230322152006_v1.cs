@@ -11,7 +11,7 @@ namespace dsapi.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Passwords",
+                name: "UserPasswords",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -21,11 +21,11 @@ namespace dsapi.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Passwords", x => x.Id);
+                    table.PrimaryKey("PK_UserPasswords", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
-                name: "USer",
+                name: "Users",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -35,11 +35,11 @@ namespace dsapi.Migrations
                     LastName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     Email = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     PhoneNumber = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    Type = table.Column<int>(type: "int", nullable: false)
+                    Role = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_USer", x => x.Id);
+                    table.PrimaryKey("PK_Users", x => x.Id);
                 });
         }
 
@@ -47,10 +47,10 @@ namespace dsapi.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Passwords");
+                name: "UserPasswords");
 
             migrationBuilder.DropTable(
-                name: "USer");
+                name: "Users");
         }
     }
 }

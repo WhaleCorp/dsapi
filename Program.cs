@@ -83,7 +83,7 @@ var services = builder.Services;
         };
     });
 
-    services.AddTransient<IUserService, UserService>();
+services.AddScoped<IUserService, UserService>();
 
 
 var app = builder.Build();

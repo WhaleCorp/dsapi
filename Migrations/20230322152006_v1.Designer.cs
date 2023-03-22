@@ -11,8 +11,8 @@ using dsapi.DBContext;
 namespace dsapi.Migrations
 {
     [DbContext(typeof(dbcontext))]
-    [Migration("20230309171937_v2")]
-    partial class v2
+    [Migration("20230322152006_v1")]
+    partial class v1
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -57,7 +57,7 @@ namespace dsapi.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<int>("Type")
+                    b.Property<int>("Role")
                         .HasColumnType("int");
 
                     b.HasKey("Id");

@@ -5,24 +5,25 @@ namespace dsapi.Services
 {
     public class UserService : IUserService
     {
-        private object user = "";
-
-        private object User { get => user; set => user = value; }
-
-        public object GetUserDetails()
+        private dbcontext _db;
+        public UserService(dbcontext db)
         {
-            return User;
+            _db = db;
         }
 
         public bool IsValidUserInformation(LoginModel model)
         {
+            var user = _db.User.Join(_db.UserPasswords,
+                             user => user.Id,
+                             pass => pass.UserId,
+                             (user, pass) => new { user, pass }
+                             ).Where(u => u.user.Login == model.Login && u.pass.Password == model.Password);
 
-            if (user != null)
-            {
-                User = user;
-                return true;
-            }
-            else return false;
+            foreach (var row in user)
+                if (row != null)
+                    return true;
+                else return false;
+            return false;
         }
     }
 }
