@@ -8,6 +8,5 @@ namespace dsapi.DBContext
         public dbcontext(DbContextOptions options) : base(options) { }
 
         public DbSet<User> User { get; set; }
-        public DbSet<UserPassword> UserPasswords { get; set; }
     }
 }

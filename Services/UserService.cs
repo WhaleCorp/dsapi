@@ -1,11 +1,13 @@
 ﻿using dsapi.DBContext;
 using dsapi.Models;
+using Microsoft.AspNetCore.Identity;
 
 namespace dsapi.Services
 {
     public class UserService : IUserService
     {
         private dbcontext _db;
+        private PasswordHasher<User> hash = new PasswordHasher<User>();
         public UserService(dbcontext db)
         {
             _db = db;
@@ -13,14 +15,10 @@ namespace dsapi.Services
 
         public bool IsValidUserInformation(LoginModel model)
         {
-            var user = _db.User.Join(_db.UserPasswords,
-                             user => user.Id,
-                             pass => pass.UserId,
-                             (user, pass) => new { user, pass }
-                             ).Where(u => u.user.Login == model.Login && u.pass.Password == model.Password);
+            var user = _db.User.Where(u => u.Login == model.Login );
 
             foreach (var row in user)
-                if (row != null)
+                if (row != null && hash.VerifyHashedPassword(row, row.Password, model.Password) == PasswordVerificationResult.Success)
                     return true;
                 else return false;
             return false;

@@ -2,6 +2,7 @@
 using dsapi.Models;
 using dsapi.Services;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace dsapi.Controllers
@@ -12,6 +13,7 @@ namespace dsapi.Controllers
     {
         private readonly dbcontext _db;
         private readonly IUserService _userService;
+        private PasswordHasher<User> hash = new PasswordHasher<User>();
         public UserController(dbcontext db, IUserService userService)
         {
             _db = db;
@@ -21,18 +23,16 @@ namespace dsapi.Controllers
 
         [AllowAnonymous]
         [HttpPost]
-        public IActionResult CreateNewUser([FromBody] CreateUserModel createUserModel)
+        public IActionResult CreateNewUser([FromBody] User user)
         {
             try
             {
-                _db.User.Add(createUserModel.User);
-                var user = _db.User.Where(u => u.Login == createUserModel.User.Login).FirstOrDefault();
-                createUserModel.UserPassword.UserId = user.Id;
-                _db.UserPasswords.Add(createUserModel.UserPassword);
+                user.Password = hash.HashPassword(user, user.Password);
+                _db.User.Add(user);
                 _db.SaveChanges();
                 return Ok(new
                 {
-                    data = "User Added"
+                    data = ""
                 });
             }
             catch (Exception ex) { return BadRequest(ex.Message); }
