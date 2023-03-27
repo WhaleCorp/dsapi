@@ -4,6 +4,6 @@ namespace dsapi.Services
 {
     public interface IUserService
     {
-        bool IsValidUserInformation(LoginModel model);
+        int IsValidUserInformation(LoginModel model);
     }
 }

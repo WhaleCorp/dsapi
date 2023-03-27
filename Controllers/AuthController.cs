@@ -29,11 +29,11 @@ namespace dsapi.Controllers
         [HttpPost]
         public IActionResult Auth([FromBody] LoginModel data)
         {
-            bool isValid = _userService.IsValidUserInformation(data);
-            if (isValid)
+            int isId = _userService.IsValidUserInformation(data);
+            if (isId != 00)
             {
                 var tokenString = GenerateJwtToken(data.Login);
-                return Ok(new { Token = tokenString });
+                return Ok(new { UserId = isId, Token = tokenString });
             }
             return BadRequest("Please pass the valid Login and Password");
         }
@@ -51,14 +51,16 @@ namespace dsapi.Controllers
                 code.Append(GetRandomCharacter(random));
             }
 
+            _db.Monitor.Add(new Models.Monitor(code.ToString()));
+            _db.SaveChanges();
+            return Ok(code.ToString());
+
             char GetRandomCharacter(Random rnd)
             {
                 var text = "$%#@!*abcdefghijklmnopqrstuvwxyz1234567890?;:ABCDEFGHIJKLMNOPQRSTUVWXYZ^&";
                 int index = rnd.Next(text.Length);
                 return text[index];
             }
-
-            return Ok(code.ToString());
         }
 
         [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme)]

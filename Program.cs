@@ -91,6 +91,7 @@ var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 app.UseWebSockets();
+app.UseMiddleware<WebSoketMiddleware>();
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();

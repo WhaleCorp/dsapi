@@ -30,10 +30,7 @@ namespace dsapi.Controllers
                 user.Password = hash.HashPassword(user, user.Password);
                 _db.User.Add(user);
                 _db.SaveChanges();
-                return Ok(new
-                {
-                    data = ""
-                });
+                return Ok();
             }
             catch (Exception ex) { return BadRequest(ex.Message); }
         }
