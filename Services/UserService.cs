@@ -13,6 +13,12 @@ namespace dsapi.Services
             _db = db;
         }
 
+        public User GetById(int id)
+        {
+            var user = _db.User.FirstOrDefault(u => u.Id == id);
+            return user;
+        }
+
         public int IsValidUserInformation(LoginModel model)
         {
             var user = _db.User.Where(u => u.Login == model.Login );

@@ -32,7 +32,7 @@ namespace dsapi.Controllers
             int isId = _userService.IsValidUserInformation(data);
             if (isId != 00)
             {
-                var tokenString = GenerateJwtToken(data.Login);
+                var tokenString = GenerateJwtToken(isId);
                 return Ok(new { UserId = isId, Token = tokenString });
             }
             return BadRequest("Please pass the valid Login and Password");
@@ -75,13 +75,13 @@ namespace dsapi.Controllers
         /// </summary>
         /// <param name="accountId"></param>
         /// <returns></returns>
-        private string GenerateJwtToken(string Login)
+        private string GenerateJwtToken(int id)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(_configuration["Jwt:key"]);
             var tokenDescriptor = new SecurityTokenDescriptor
             {
-                Subject = new ClaimsIdentity(new[] { new Claim("id", Login) }),
+                Subject = new ClaimsIdentity(new[] { new Claim("UserId", id.ToString()) }),
                 Expires = DateTime.UtcNow.AddHours(1),
                 Issuer = _configuration["Jwt:Issuer"],
                 Audience = _configuration["Jwt:Audience"],

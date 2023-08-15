@@ -19,17 +19,16 @@ namespace dsapi.Middlware
             _configuration = configuration;
         }
 
-        public async Task InvokeAsync(HttpContext context, dbcontext db)
+        public async Task InvokeAsync(HttpContext context, IUserService userService)
         {
             var token = context.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
 
             if (token != null)
-                AttachAccountToContext(context, token);
-            await db.SaveChangesAsync();
+                AttachAccountToContext(context,userService, token);
             await _next(context);
         }
 
-        private void AttachAccountToContext(HttpContext context, string token)
+        private void AttachAccountToContext(HttpContext context, IUserService userService, string token)
         {
 
                 var tokenHandler = new JwtSecurityTokenHandler();
@@ -44,9 +43,15 @@ namespace dsapi.Middlware
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key))
                 }, out SecurityToken validatedToken);
 
-                context.Items["User"] = "a";
+            var jwtToken = (JwtSecurityToken)validatedToken;
+            var userId = int.Parse(jwtToken.Claims.First(x => x.Type == "UserId").Value);
+
+            if(userId!= null)
+                context.Items["User"] = userService.GetById(userId);
 
         }
+
+
     }
 }
 
