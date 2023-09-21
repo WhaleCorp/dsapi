@@ -40,8 +40,9 @@ namespace dsapi.Middlware
                             var messageBytes = buffer.Skip(buffer.Offset).Take(received.Count).ToArray();
                             string receivedMessage = Encoding.UTF8.GetString(messageBytes);
                             Debug.WriteLine("Received: {0}", receivedMessage);
+                            if (Socket.guids.ContainsKey(receivedMessage)) return;
                             Socket.guids.TryAdd(receivedMessage, guid);
-                            Socket.SendMessage(receivedMessage,"recived");
+                            Socket.SendMessage(receivedMessage, "recived");
                             break;
                     }
                 }

@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace dsapi.Models
+namespace dsapi.Tables
 {
     [Table("Users")]
     public class User
@@ -9,20 +9,20 @@ namespace dsapi.Models
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
-        [Required,StringLength(100)]
+        [Required, StringLength(100)]
         public string Login { get; set; }
         [Required, StringLength(100)]
         public string FirstName { get; set; }
-        [Required,StringLength(100)]
+        [Required, StringLength(100)]
         public string LastName { get; set; }
         [Required, StringLength(100)]
         public string Email { get; set; }
-        [Required,StringLength(100)]
+        [Required, StringLength(100)]
         public string PhoneNumber { get; set; }
         [Required]
-        public string Password { get; set; }
+        public int RoleId { get; set; }
         [Required]
-        public int Role { get; set; }
+        public string Password { get; set; }
 
     }
 }

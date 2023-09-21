@@ -1,7 +1,9 @@
 ﻿using dsapi.DBContext;
 using dsapi.Models;
 using dsapi.Services;
+using dsapi.Tables;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -17,8 +19,9 @@ namespace dsapi.Controllers
         private readonly IConfiguration _configuration;
         private readonly dbcontext _db;
         private readonly IUserService _userService;
+        private PasswordHasher<User> hash = new PasswordHasher<User>();
 
-        public AuthController(IConfiguration configuration, dbcontext db,IUserService service)
+        public AuthController(IConfiguration configuration, dbcontext db, IUserService service)
         {
             _configuration = configuration;
             _db = db;
@@ -27,7 +30,7 @@ namespace dsapi.Controllers
 
         [AllowAnonymous]
         [HttpPost]
-        public IActionResult Auth([FromBody] LoginModel data)
+        public IActionResult SignIn([FromBody] LoginModel data)
         {
             int isId = _userService.IsValidUserInformation(data);
             if (isId != 00)
@@ -38,26 +41,54 @@ namespace dsapi.Controllers
             return BadRequest("Please pass the valid Login and Password");
         }
 
+        [AllowAnonymous]
+        [HttpPost]
+        public IActionResult SignUp([FromBody] User user)
+        {
+            try
+            {
+                user.Password = hash.HashPassword(user, user.Password);
+                _db.User.Add(user);
+                _db.SaveChanges();
+                return Ok();
+            }
+            catch (Exception ex) { return BadRequest(ex.Message); }
+        }
+
+        [Authorize]
+        [HttpGet]
+        public IActionResult SignOut()
+        {
+            int id = int.Parse(User.Claims.First(i => i.Type == "UserId").Value);
+            try
+            {
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
+        }
+
 
         [AllowAnonymous]
         [HttpGet]
-        public IActionResult GenerateCode()
+        public IActionResult GetMonitorCode()
         {
-            int len = 6;
+            int len = 10;
             StringBuilder code = new StringBuilder();
             Random random = new Random();
-            for(int i = 0; i <= len; i++)
+            for (int i = 0; i <= len; i++)
             {
                 code.Append(GetRandomCharacter(random));
             }
-
-            _db.Monitor.Add(new Models.Monitor(code.ToString()));
+            _db.Monitor.Add(new Tables.Monitor(code.ToString()));
             _db.SaveChanges();
             return Ok(code.ToString());
 
             char GetRandomCharacter(Random rnd)
             {
-                var text = "$%#@!*abcdefghijklmnopqrstuvwxyz1234567890?;:ABCDEFGHIJKLMNOPQRSTUVWXYZ^&";
+                string text = "$%#@!*abcdefghijklmnopqrstuvwxyz1234567890?;:ABCDEFGHIJKLMNOPQRSTUVWXYZ^&";
                 int index = rnd.Next(text.Length);
                 return text[index];
             }

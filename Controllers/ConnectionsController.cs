@@ -1,4 +1,5 @@
 ﻿using dsapi.SocketController;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace dsapi.Controllers
@@ -12,6 +13,21 @@ namespace dsapi.Controllers
         {
             Socket.CleanSoket();
             return Ok(Socket.sockets.Keys);
+        }
+
+        [Authorize]
+        [HttpPut]
+        public IActionResult PutOnlineUser()
+        {
+            try
+            {
+
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e);
+            }
         }
     }
 }

@@ -4,12 +4,10 @@ namespace dsapi.Models
 {
     public class LoginModel
     {
-        private string login = "";
-        private string password = "";
 
         [Required]
-        public string Login { get => login; set => login = value; }
+        public string Login { get; set; }
         [Required]
-        public string Password { get => password; set => password = value; }
+        public string Password { get; set; }
     }
 }

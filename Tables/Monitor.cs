@@ -1,24 +1,24 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace dsapi.Models
+namespace dsapi.Tables
 {
     [Table("Monitors")]
     public class Monitor
     {
-        private string nameForUserUse="";
-
-        public Monitor(string monitorName)
+        public Monitor(string code)
         {
-            MonitorName = monitorName;
+            Code = code;
         }
 
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
         public int UserId { get; set; }
-        public string NameForUserUse { get => nameForUserUse; set => nameForUserUse = value; }
+        public string? Name { get; set; }
         [Required]
-        public string MonitorName { get; set; }
+        public string Code { get; set; }
+        public string? Location { get; set; }
+        public string? Size { get; set; }
     }
 }

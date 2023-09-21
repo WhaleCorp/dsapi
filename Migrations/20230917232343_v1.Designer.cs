@@ -11,8 +11,8 @@ using dsapi.DBContext;
 namespace dsapi.Migrations
 {
     [DbContext(typeof(dbcontext))]
-    [Migration("20230325234447_v3")]
-    partial class v3
+    [Migration("20230917232343_v1")]
+    partial class v1
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,7 +24,7 @@ namespace dsapi.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("dsapi.Models.Monitor", b =>
+            modelBuilder.Entity("dsapi.Tables.Monitor", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -32,8 +32,17 @@ namespace dsapi.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Name")
+                    b.Property<string>("Code")
                         .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Location")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Size")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("UserId")
@@ -44,7 +53,7 @@ namespace dsapi.Migrations
                     b.ToTable("Monitors");
                 });
 
-            modelBuilder.Entity("dsapi.Models.MonitorData.MonitorImg", b =>
+            modelBuilder.Entity("dsapi.Tables.MonitorData", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -52,19 +61,19 @@ namespace dsapi.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Img")
+                    b.Property<string>("Jsx")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("MonitorId")
+                    b.Property<int>("UserId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.ToTable("MonitorsImg");
+                    b.ToTable("MonitorsData");
                 });
 
-            modelBuilder.Entity("dsapi.Models.MonitorData.MonitorIsShowsTime", b =>
+            modelBuilder.Entity("dsapi.Tables.Role", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -72,38 +81,16 @@ namespace dsapi.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<bool>("IsShowsTime")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("MonitorId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("MonitorsIsShowsTime");
-                });
-
-            modelBuilder.Entity("dsapi.Models.MonitorData.MonitorText", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("MonitorId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Text")
+                    b.Property<string>("RoleName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("MonitorsText");
+                    b.ToTable("Roles");
                 });
 
-            modelBuilder.Entity("dsapi.Models.User", b =>
+            modelBuilder.Entity("dsapi.Tables.User", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -140,7 +127,7 @@ namespace dsapi.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<int>("Role")
+                    b.Property<int>("RoleId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");

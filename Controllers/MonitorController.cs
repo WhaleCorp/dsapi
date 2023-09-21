@@ -17,42 +17,59 @@ namespace dsapi.Controllers
             this._db = _db;
         }
 
+        [Authorize]
         [HttpPut]
-        public IActionResult LinkMonitorToUser([FromBody]UserIdMonitorName obj)
+        public IActionResult PutLinkMonitorToUser([FromBody] string monitorCode)
         {
+            int id = int.Parse(User.Claims.First(i => i.Type == "UserId").Value);
             try
             {
-                var result = _db.Monitor.SingleOrDefault(m=>m.MonitorName==obj.MonitorName);
+                var result = _db.Monitor.Single(m => m.Code == monitorCode);
                 if (result != null)
                 {
-                    result.UserId = obj.UserId;
+                    result.UserId = id;
                     _db.SaveChanges();
                 }
                 return Ok();
-            }catch(Exception ex)
+            }
+            catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest(ex);
             }
         }
 
+        [Authorize]
         [HttpPost]
-        public IActionResult PostDataToDSPage([FromBody] MonitorMessage mm)
+        public IActionResult PostDataToDSPage([FromBody] string data)
         {
+            int userId = int.Parse(User.Claims.First(i => i.Type == "UserId").Value);
             try
             {
-                Socket.SendMessage(mm.Guid, mm.Data);
+                string code = _db.Monitor.Where(e => e.UserId == userId).Single().ToString();
+                Socket.SendMessage(code, data);
                 return Ok();
             }
-            catch(Exception e)
+            catch (Exception ex)
             {
-                return BadRequest(e.Message);
-            }    
+                return BadRequest(ex);
+            }
         }
 
+        [Authorize]
         [HttpGet]
-        public IActionResult TestGet()
+        public IActionResult GetMonitors()
         {
-            return Ok();
+            int userId = int.Parse(User.Claims.First(i => i.Type == "UserId").Value);
+            try
+            {
+                var monitors = _db.Monitor.Where(e => e.UserId == userId).ToList();
+                return Ok(monitors);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
+
         }
     }
 }

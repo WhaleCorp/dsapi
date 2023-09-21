@@ -1,5 +1,6 @@
 ﻿using dsapi.DBContext;
 using dsapi.Models;
+using dsapi.Tables;
 using Microsoft.AspNetCore.Identity;
 
 namespace dsapi.Services

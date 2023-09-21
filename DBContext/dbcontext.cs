@@ -1,6 +1,5 @@
-﻿using dsapi.Models;
-using Microsoft.EntityFrameworkCore;
-using dsapi.Models.MonitorData;
+﻿using Microsoft.EntityFrameworkCore;
+using dsapi.Tables;
 
 namespace dsapi.DBContext
 {
@@ -9,9 +8,8 @@ namespace dsapi.DBContext
         public dbcontext(DbContextOptions options) : base(options) { }
 
         public DbSet<User> User { get; set; }
-        public DbSet<Models.Monitor> Monitor { get; set; }
-        public DbSet<MonitorIsShowsTime> MonitorIsShowsTime { get; set; }
-        public DbSet<MonitorImg> MonitorImg { get; set; }
-        public DbSet<MonitorText> MonitorText { get; set; }
+        public DbSet<Tables.Monitor> Monitor { get; set; }
+        public DbSet<Role> Role { get; set; }
+        public DbSet<MonitorData> MonitorData { get; set; }
     }
 }
