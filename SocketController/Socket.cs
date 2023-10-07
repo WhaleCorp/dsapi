@@ -9,12 +9,12 @@ namespace dsapi.SocketController
         public static ConcurrentDictionary<string, WebSocket> sockets = new ConcurrentDictionary<string, WebSocket>();
         public static ConcurrentDictionary<string, string> guids = new ConcurrentDictionary<string, string>();
 
-        public static Task SendMessage(string code,string data,CancellationToken ct = default(CancellationToken))
+        async public static Task SendMessageAsync(string code,string data,CancellationToken ct = default(CancellationToken))
         {
             var buffer = Encoding.UTF8.GetBytes(data);
             var segment = new ArraySegment<byte>(buffer);
 
-            return sockets[guids[code]].SendAsync(segment,WebSocketMessageType.Text,true,ct);
+            await sockets[guids[code]].SendAsync(segment,WebSocketMessageType.Text,true,ct);
         }
 
         public static void CleanSoket()

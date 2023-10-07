@@ -84,11 +84,11 @@ namespace dsapi.Controllers
             }
             _db.Monitor.Add(new Tables.Monitor(code.ToString()));
             _db.SaveChanges();
-            return Ok(code.ToString());
+            return Ok(new { code=code.ToString() });
 
             char GetRandomCharacter(Random rnd)
             {
-                string text = "$%#@!*abcdefghijklmnopqrstuvwxyz1234567890?;:ABCDEFGHIJKLMNOPQRSTUVWXYZ^&";
+                string text = "abcdefghijklmnopqrstuvwxyz1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ";
                 int index = rnd.Next(text.Length);
                 return text[index];
             }

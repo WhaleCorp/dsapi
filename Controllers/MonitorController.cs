@@ -1,12 +1,12 @@
 using dsapi.DBContext;
 using dsapi.Models;
 using dsapi.SocketController;
+using dsapi.Tables;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace dsapi.Controllers
 {
-    [Authorize]
     [ApiController]
     [Route("[controller]/[action]")]
     public class MonitorController : ControllerBase
@@ -28,6 +28,7 @@ namespace dsapi.Controllers
                 if (result != null)
                 {
                     result.UserId = id;
+                    _db.MonitorData.Add(new MonitorData(id, result.Code));
                     _db.SaveChanges();
                 }
                 return Ok();
@@ -38,16 +39,36 @@ namespace dsapi.Controllers
             }
         }
 
-        [Authorize]
+        
         [HttpPost]
         public IActionResult PostDataToDSPage([FromBody] string data)
         {
-            int userId = int.Parse(User.Claims.First(i => i.Type == "UserId").Value);
+            //Replace " to ' !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
             try
             {
-                string code = _db.Monitor.Where(e => e.UserId == userId).Single().ToString();
-                Socket.SendMessage(code, data);
-                return Ok();
+                //var result = _db.MonitorData.Where(e => e.Code == code).Single();
+                //if (result != null)
+                //{
+                //    result.Data = data;
+                //    _db.SaveChanges();
+                //}
+                //Socket.SendMessageAsync(code, 200.ToString());
+                return Ok(new { data });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
+        }
+
+        [AllowAnonymous]
+        [HttpGet]
+        async public Task<IActionResult> GetData(string code)
+        {
+            try
+            {
+                string data = await Task.Run(() => _db.MonitorData.Where(e => e.Code == code).Single().Data.ToString());
+                return Ok(new { Data = data });
             }
             catch (Exception ex)
             {

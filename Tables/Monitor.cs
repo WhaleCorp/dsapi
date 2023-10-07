@@ -15,10 +15,13 @@ namespace dsapi.Tables
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
         public int UserId { get; set; }
+        [StringLength(100)]
         public string? Name { get; set; }
-        [Required]
+        [Required,StringLength(100)]
         public string Code { get; set; }
+        [StringLength(100)]
         public string? Location { get; set; }
+        [StringLength(100)]
         public string? Size { get; set; }
     }
 }

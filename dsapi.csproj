@@ -21,6 +21,16 @@
     <PackageReference Include="Microsoft.Extensions.Identity.Core" Version="7.0.3" />
     <PackageReference Include="Microsoft.TestPlatform.TestHost" Version="17.5.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
+    <PackageReference Include="System.Data.SQLite" Version="1.0.118" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="7.0.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Remove="Helpers\" />
+    <None Remove="DB\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Helpers\" />
+    <Folder Include="DB\" />
+  </ItemGroup>
 </Project>

@@ -10,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,12 +20,13 @@ ConfigurationManager configuration = builder.Configuration;
 var services = builder.Services;
 
 
-    services.AddDbContext<dbcontext>(options => options.UseSqlServer(configuration.GetConnectionString("ConnStr")), ServiceLifetime.Scoped);
+    services.AddDbContext<dbcontext>(options => options.UseSqlite(configuration.GetConnectionString("ConnStr")), ServiceLifetime.Scoped);
 
+    
+    services.AddControllers().AddJsonOptions(x =>
+                x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 
-    services.AddControllers();
-
-    services.AddEndpointsApiExplorer();
+services.AddEndpointsApiExplorer();
 
     services.AddSwaggerGen();
 
@@ -84,8 +86,7 @@ var services = builder.Services;
     });
 
 services.AddScoped<IUserService, UserService>();
-
-
+//builder.WebHost.UseUrls("https://localhost:7296",  "http://192.168.1.12:5296");
 var app = builder.Build();
 
 
@@ -102,6 +103,7 @@ app.UseMiddleware<JWTMiddleware>();
 app.UseCors(
     options => options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader()
     );
+
 app.UseHttpsRedirection();
 
 app.UseAuthentication();
