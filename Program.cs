@@ -86,7 +86,7 @@ services.AddEndpointsApiExplorer();
     });
 
 services.AddScoped<IUserService, UserService>();
-builder.WebHost.UseUrls("https://0.0.0.0:7296",  "http://0.0.0.0:5296");
+builder.WebHost.UseUrls("http://0.0.0.0:5296");
 var app = builder.Build();
 
 
@@ -104,7 +104,7 @@ app.UseCors(
     options => options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader()
     );
 
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 
 app.UseAuthentication();
 
