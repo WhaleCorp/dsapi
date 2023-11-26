@@ -32,11 +32,11 @@ namespace dsapi.Controllers
         [HttpPost]
         public IActionResult SignIn([FromBody] LoginModel data)
         {
-            int isId = _userService.IsValidUserInformation(data);
-            if (isId != 00)
+            IdRoleModel model = _userService.IsValidUserInformation(data);
+            if (model.Id != 00)
             {
-                var tokenString = GenerateJwtToken(isId);
-                return Ok(new { UserId = isId, Token = tokenString });
+                var tokenString = GenerateJwtToken(model.Id,model.RoleName);
+                return Ok(new {role=model.RoleName, Token = tokenString } );
             }
             return BadRequest("Please pass the valid Login and Password");
         }
@@ -48,12 +48,15 @@ namespace dsapi.Controllers
             try
             {
                 user.Password = hash.HashPassword(user, user.Password);
+                user.RoleId = 2;
                 _db.User.Add(user);
                 _db.SaveChanges();
                 return Ok();
             }
             catch (Exception ex) { return BadRequest(ex.Message); }
         }
+
+        
 
         [Authorize]
         [HttpGet]
@@ -70,6 +73,30 @@ namespace dsapi.Controllers
             }
         }
 
+        [Authorize]
+        [HttpGet]
+        public IActionResult CheckUserRole()
+        {
+            try
+            {
+                string roleName = User.Claims.First(i => i.Type == "Role").Value;
+                if (roleName == "Admin") return Ok("Admin");
+                else if (roleName == "User") return Ok("User");
+                else if (roleName == "Manager") return Ok("Manager");
+                return BadRequest("Something went wrong");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
+        }
+
+
+        [HttpGet]
+        public IActionResult getTest()
+        {
+            return Ok();
+        }
 
         [AllowAnonymous]
         [HttpGet]
@@ -82,7 +109,7 @@ namespace dsapi.Controllers
             {
                 code.Append(GetRandomCharacter(random));
             }
-            _db.Monitor.Add(new Tables.Monitor(code.ToString()));
+            _db.Monitor.Add(new Tables.Monitor(code.ToString(),"Horizontal"));
             _db.SaveChanges();
             return Ok(new { code=code.ToString() });
 
@@ -106,13 +133,13 @@ namespace dsapi.Controllers
         /// </summary>
         /// <param name="accountId"></param>
         /// <returns></returns>
-        private string GenerateJwtToken(int id)
+        private string GenerateJwtToken(int id,string role)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(_configuration["Jwt:key"]);
             var tokenDescriptor = new SecurityTokenDescriptor
             {
-                Subject = new ClaimsIdentity(new[] { new Claim("UserId", id.ToString()) }),
+                Subject = new ClaimsIdentity(new[] { new Claim("UserId", id.ToString()),new Claim("Role",role) }),
                 Expires = DateTime.UtcNow.AddHours(1),
                 Issuer = _configuration["Jwt:Issuer"],
                 Audience = _configuration["Jwt:Audience"],

@@ -6,9 +6,10 @@ namespace dsapi.Tables
     [Table("Monitors")]
     public class Monitor
     {
-        public Monitor(string code)
+        public Monitor(string code,string orientation)
         {
             Code = code;
+            Orientation = orientation;
         }
 
         [Key]
@@ -23,5 +24,7 @@ namespace dsapi.Tables
         public string? Location { get; set; }
         [StringLength(100)]
         public string? Size { get; set; }
+        [StringLength(100)]
+        public string? Orientation { get; set; }
     }
 }

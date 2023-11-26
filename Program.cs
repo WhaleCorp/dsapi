@@ -86,7 +86,7 @@ services.AddEndpointsApiExplorer();
     });
 
 services.AddScoped<IUserService, UserService>();
-//builder.WebHost.UseUrls("https://localhost:7296",  "http://192.168.1.12:5296");
+//builder.WebHost.UseUrls("https://localhost:7296",  "http://192.168.1.12:5296", "https://192.168.1.12:7296");
 var app = builder.Build();
 
 

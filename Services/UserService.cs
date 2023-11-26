@@ -20,15 +20,18 @@ namespace dsapi.Services
             return user;
         }
 
-        public int IsValidUserInformation(LoginModel model)
+        public IdRoleModel IsValidUserInformation(LoginModel model)
         {
-            var user = _db.User.Where(u => u.Login == model.Login );
+            var user = _db.User.Where(u => u.Login == model.Login);
 
             foreach (var row in user)
                 if (row != null && hash.VerifyHashedPassword(row, row.Password, model.Password) == PasswordVerificationResult.Success)
-                    return row.Id;
-                else return 00;
-            return 00;
+                {
+                    string? roleName = _db.Role.FirstOrDefault(n => n.Id == row.RoleId).RoleName;
+                    return new IdRoleModel(row.Id,roleName);
+                }
+                else return new IdRoleModel(00);
+            return new IdRoleModel(00);
         }
     }
 }

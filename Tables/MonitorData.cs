@@ -11,6 +11,7 @@ namespace dsapi.Tables
             UserId = userId;
             Code = code;
             Data = "";
+            RawData = "";
         }
 
         [Key]
@@ -21,5 +22,7 @@ namespace dsapi.Tables
         [Required, StringLength(200)]
         public string Code { get; set; }
         public string Data { get; set; }
+        public string RawData { get; set; }
+        public string Ads { get; set; }
     }
 }
