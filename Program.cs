@@ -104,7 +104,7 @@ app.UseMiddleware<JWTMiddleware>();
 //    options => options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader()
 //    );
 app.UseCors(
-    options => options.WithOrigins("https://digitalsign.kaykov.co").AllowAnyMethod().AllowAnyHeader());
+    options => options.WithOrigins("https://digitalsign.kaykov.co").AllowAnyMethod().AllowAnyHeader().AllowCredentials());
 //app.UseHttpsRedirection();
 
 app.UseAuthentication();
