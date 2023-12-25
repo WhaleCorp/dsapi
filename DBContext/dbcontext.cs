@@ -11,5 +11,6 @@ namespace dsapi.DBContext
         public DbSet<Tables.Monitor> Monitor { get; set; }
         public DbSet<Role> Role { get; set; }
         public DbSet<MonitorData> MonitorData { get; set; }
+        public DbSet<Ads> Ads { get; set; }
     }
 }

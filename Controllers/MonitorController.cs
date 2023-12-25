@@ -44,17 +44,17 @@ namespace dsapi.Controllers
 
         [Authorize]
         [HttpPut]
-        public IActionResult PutUpdateOrientation([FromBody]string orientation,string code)
+        public IActionResult PutUpdateOrientation([FromBody]OrientationModel model)
         {
             try
             {
-                var monitor = _db.Monitor.Single(n => n.Code == code);
+                var monitor = _db.Monitor.Single(n => n.Code == model.Code);
                 if(monitor !=null)
                 {
-                    monitor.Orientation = orientation;
+                    monitor.Orientation = model.Orientation;
                     _db.SaveChanges();
                 }    
-                return Ok();
+                return Ok("Updated");
             }
             catch (Exception ex)
             {
@@ -64,18 +64,16 @@ namespace dsapi.Controllers
 
         [Authorize]
         [HttpPost]
-        public IActionResult PostAdsToMonitors([FromBody]MonitorAds data)
+        public IActionResult PostAddAds([FromBody]MonitorAds data)
         {
             try
             {
-                var monitors = _db.Monitor.Where(n => n.Orientation.Equals(data.Orientation)).Select(n => n.Code).ToList();
-                var update = _db.MonitorData.Where(n => monitors.Contains(n.Code));
-                if (update != null)
-                {
-                    foreach (var i in update)
-                        i.Ads = data.Ads;
-                    _db.SaveChanges();
-                }
+                var ads = _db.Ads.SingleOrDefault(a => a.Orientation == data.Orientation);
+                if (ads != null)
+                    ads.Photo = data.Ads;
+                else
+                    _db.Ads.Add(new Ads(data.Orientation, data.Ads));
+                _db.SaveChanges();
                 return Ok();
             }
             catch (Exception ex)
@@ -127,6 +125,26 @@ namespace dsapi.Controllers
             }
         }
 
+        [AllowAnonymous]
+        [HttpGet]
+        async public Task<IActionResult> GetAds(string code)
+        {
+            try
+            {
+                var orientation =  _db.Monitor.Single(m => m.Code == code).Orientation;
+                if (orientation != null)
+                {
+                    var data = _db.Ads.SingleOrDefault(a => a.Orientation == orientation).Photo;
+                    return Ok(new { Data = data });
+                }
+                return Ok(new { Data = "Data doesn't exist" });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
+        }
+
         [Authorize]
         [HttpGet]
         public IActionResult GetMonitors()
@@ -141,7 +159,6 @@ namespace dsapi.Controllers
             {
                 return BadRequest(ex);
             }
-
         }
 
         [Authorize]
