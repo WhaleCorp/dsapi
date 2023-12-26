@@ -29,7 +29,7 @@ namespace dsapi.Controllers
                 if (result != null)
                 {
                     result.UserId = id;
-                    if (_db.MonitorData.First(n => n.Code.Equals(code)) != null)
+                    if (_db.MonitorData.FirstOrDefault(n => n.Code.Equals(code)) == null)
                         _db.MonitorData.Add(new MonitorData(id, result.Code));
                     _db.SaveChanges();
                     return Ok("Success");
