@@ -13,6 +13,9 @@ namespace dsapi.Controllers
     public class MonitorController : ControllerBase
     {
         private readonly dbcontext _db;
+        private bool IsAds { get; set; }
+        private bool IsData { get; set; }
+        private Queue<string> codeQueue = new Queue<string>();
         public MonitorController(dbcontext _db)
         {
             this._db = _db;
@@ -74,6 +77,7 @@ namespace dsapi.Controllers
                 else
                     _db.Ads.Add(new Ads(data.Orientation, data.Ads));
                 _db.SaveChanges();
+                IsAds = true;
                 return Ok();
             }
             catch (Exception ex)
@@ -95,6 +99,8 @@ namespace dsapi.Controllers
                 {
                     result.Data = data.Data;
                     result.RawData = data.RawData;
+                    IsData = true;
+                    codeQueue.Enqueue(data.Code);
                     _db.SaveChanges();
                 }
                 else
@@ -131,10 +137,10 @@ namespace dsapi.Controllers
         {
             try
             {
-                var orientation =  _db.Monitor.Single(m => m.Code == code).Orientation;
+                var orientation = await Task.Run(() => _db.Monitor.Single(m => m.Code == code).Orientation);
                 if (orientation != null)
                 {
-                    var data = _db.Ads.SingleOrDefault(a => a.Orientation == orientation).Photo;
+                    var data = await Task.Run(() => _db.Ads.SingleOrDefault(a => a.Orientation == orientation).Photo);
                     return Ok(new { Data = data });
                 }
                 return Ok(new { Data = "Data doesn't exist" });
@@ -171,6 +177,25 @@ namespace dsapi.Controllers
                 if (roleName != "Admin") return BadRequest("Need admin token");
                 var monitors = _db.Monitor.Where(n => n.UserId == userId).ToList();
                 return Ok(monitors);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
+        }
+
+        [AllowAnonymous]
+        [HttpGet]
+        public IActionResult CheckUpdates(string code)
+        {
+            try
+            {
+
+                if (IsData && codeQueue.Dequeue() == code)
+                    return Ok(new { code = 222 });
+                if (IsAds)
+                    return Ok(new { code = 111 });
+                return Ok(new { code = 000 });
             }
             catch (Exception ex)
             {
