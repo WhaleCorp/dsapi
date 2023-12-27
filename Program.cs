@@ -86,8 +86,8 @@ services.AddEndpointsApiExplorer();
     });
 
 services.AddScoped<IUserService, UserService>();
-builder.WebHost.UseUrls("http://0.0.0.0:5296");
-//builder.WebHost.UseUrls(configuration["Settings:url"]);
+//builder.WebHost.UseUrls("http://0.0.0.0:5296");
+builder.WebHost.UseUrls(configuration["Settings:url"]);
 var app = builder.Build();
 
 
@@ -104,8 +104,8 @@ app.UseMiddleware<JWTMiddleware>();
 app.UseCors(
     options => options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader()
     );
-app.UseCors(
-    options => options.WithOrigins("https://digitalsign.kaykov.co").AllowAnyMethod().AllowAnyHeader().AllowCredentials());
+//app.UseCors(
+  //  options => options.WithOrigins("https://digitalsign.kaykov.co").AllowAnyMethod().AllowAnyHeader().AllowCredentials());
 //app.UseHttpsRedirection();
 
 app.UseAuthentication();

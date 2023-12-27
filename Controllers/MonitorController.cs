@@ -88,12 +88,12 @@ namespace dsapi.Controllers
 
         [Authorize]
         [HttpPost]
-        async public Task<IActionResult> PostDataToDSPage([FromBody] MonitorMessage data)
+        public IActionResult PostDataToDSPage([FromBody] MonitorMessage data)
         {
             //Replace " to ' !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
             try
             {
-                
+
                 var result = _db.MonitorData.Single(e => e.Code.Equals(data.Code));
                 if (result != null)
                 {
@@ -105,7 +105,7 @@ namespace dsapi.Controllers
                 }
                 else
                     return Ok("Monitor doesn't exist");
-                await Socket.SendMessageAsync(data.Code, 200.ToString());
+                //await Socket.SendMessageAsync(data.Code, 200.ToString());
                 return Ok(new { data });
             }
             catch (Exception ex)
