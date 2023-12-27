@@ -23,12 +23,12 @@ namespace dsapi.Controllers
 
         [Authorize]
         [HttpGet]
-        public IActionResult PutLinkMonitorToUser(string code)
+        async public Task<IActionResult> PutLinkMonitorToUser(string code)
         {
-            int id = int.Parse(User.Claims.First(i => i.Type == "UserId").Value);
+            int id =  int.Parse(User.Claims.First(i => i.Type == "UserId").Value);
             try
             {
-                var result = _db.Monitor.SingleOrDefault(m => m.Code.Equals (code));
+                var result = await Task.Run(()=>_db.Monitor.SingleOrDefault(m => m.Code.Equals (code)));
                 if (result != null)
                 {
                     result.UserId = id;
