@@ -101,9 +101,9 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 app.UseMiddleware<JWTMiddleware>();
-//app.UseCors(
-//    options => options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader()
-//    );
+app.UseCors(
+    options => options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader()
+    );
 app.UseCors(
     options => options.WithOrigins("https://digitalsign.kaykov.co").AllowAnyMethod().AllowAnyHeader().AllowCredentials());
 //app.UseHttpsRedirection();
