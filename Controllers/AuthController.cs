@@ -62,7 +62,7 @@ namespace dsapi.Controllers
 
         [Authorize]
         [HttpGet]
-        public IActionResult SignOut()
+        public IActionResult LogOut()
         {
             int id = int.Parse(User.Claims.First(i => i.Type == "UserId").Value);
             try

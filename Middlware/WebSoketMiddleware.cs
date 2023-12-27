@@ -19,8 +19,8 @@ namespace dsapi.Middlware
         {
             if (httpContext.WebSockets.IsWebSocketRequest)
             {
-                var socket = await httpContext.WebSockets.AcceptWebSocketAsync();
-                var guid = Guid.NewGuid().ToString();
+                WebSocket socket = await httpContext.WebSockets.AcceptWebSocketAsync();
+                string guid = Guid.NewGuid().ToString();
                 Socket.sockets.TryAdd(guid, socket);
 
                 while (socket.State == WebSocketState.Open)
@@ -44,7 +44,7 @@ namespace dsapi.Middlware
                             string receivedMessage = Encoding.UTF8.GetString(messageBytes);
                             if (Socket.guids.ContainsKey(receivedMessage)) return;
                             Socket.guids.TryAdd(receivedMessage, guid);
-                            Socket.SendMessageAsync(receivedMessage, "recived");
+                            await Socket.SendMessageAsync(receivedMessage, "recived");
                             break;
                     }
                 }

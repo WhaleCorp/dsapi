@@ -88,7 +88,7 @@ namespace dsapi.Controllers
 
         [Authorize]
         [HttpPost]
-        public IActionResult PostDataToDSPage([FromBody] MonitorMessage data)
+        async public Task<IActionResult> PostDataToDSPage([FromBody] MonitorMessage data)
         {
             //Replace " to ' !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
             try
@@ -105,7 +105,7 @@ namespace dsapi.Controllers
                 }
                 else
                     return Ok("Monitor doesn't exist");
-                Socket.SendMessageAsync(data.Code, 200.ToString());
+                await Socket.SendMessageAsync(data.Code, 200.ToString());
                 return Ok(new { data });
             }
             catch (Exception ex)
@@ -140,7 +140,7 @@ namespace dsapi.Controllers
                 var orientation = await Task.Run(() => _db.Monitor.Single(m => m.Code == code).Orientation);
                 if (orientation != null)
                 {
-                    var data = await Task.Run(() => _db.Ads.SingleOrDefault(a => a.Orientation == orientation).Photo);
+                    var data = await Task.Run(() => _db.Ads.Single(a => a.Orientation == orientation).Photo);
                     return Ok(new { Data = data });
                 }
                 return Ok(new { Data = "Data doesn't exist" });

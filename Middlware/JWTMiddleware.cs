@@ -46,7 +46,7 @@ namespace dsapi.Middlware
             var jwtToken = (JwtSecurityToken)validatedToken;
             var userId = int.Parse(jwtToken.Claims.First(x => x.Type == "UserId").Value);
 
-            if(userId!= null)
+            if(userId!= 0)
                 context.Items["User"] = userService.GetById(userId);
 
         }

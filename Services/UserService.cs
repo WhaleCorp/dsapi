@@ -16,7 +16,7 @@ namespace dsapi.Services
 
         public User GetById(int id)
         {
-            var user = _db.User.FirstOrDefault(u => u.Id == id);
+            User user = _db.User.First(u => u.Id == id);
             return user;
         }
 
@@ -27,8 +27,8 @@ namespace dsapi.Services
             foreach (var row in user)
                 if (row != null && hash.VerifyHashedPassword(row, row.Password, model.Password) == PasswordVerificationResult.Success)
                 {
-                    string? roleName = _db.Role.FirstOrDefault(n => n.Id == row.RoleId).RoleName;
-                    return new IdRoleModel(row.Id,roleName);
+                    string roleName = _db.Role.First(n => n.Id == row.RoleId).RoleName??"";
+                    return new IdRoleModel(row.Id, roleName);
                 }
                 else return new IdRoleModel(00);
             return new IdRoleModel(00);
