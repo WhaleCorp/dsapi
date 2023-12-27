@@ -111,7 +111,7 @@ namespace dsapi.Controllers
             {
                 code.Append(GetRandomCharacter(random));
             }
-            _db.Monitor.Add(new Tables.Monitor(code.ToString(),"Horizontal"));
+            _db.Monitor.Add(new Tables.Monitor(code.ToString(),"horizontal"));
             _db.SaveChanges();
             return Ok(new { code=code.ToString() });
 
