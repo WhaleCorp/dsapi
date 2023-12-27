@@ -35,9 +35,9 @@ namespace dsapi.Controllers
                     if (_db.MonitorData.FirstOrDefault(n => n.Code.Equals(code)) == null)
                         _db.MonitorData.Add(new MonitorData(id, result.Code));
                     _db.SaveChanges();
-                    return Ok("Success");
+                    return Ok(new { data = "Success" });
                 }
-                return Ok("Monitor doesn't exist");
+                return Ok(new { data = "Monitor doesn't exist" });
             }
             catch (Exception ex)
             {
