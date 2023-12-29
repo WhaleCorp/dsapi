@@ -15,7 +15,7 @@ namespace dsapi.Controllers
         private readonly dbcontext _db;
         private bool IsAds { get; set; }
         private bool IsData { get; set; }
-        private Queue<string> codeQueue = new Queue<string>();
+        private List<string> codesList = new List<string>();
         public MonitorController(dbcontext _db)
         {
             this._db = _db;
@@ -99,7 +99,7 @@ namespace dsapi.Controllers
                 {
                     result.Data = data.Data;
                     result.RawData = data.RawData;
-                    codeQueue.Enqueue(data.Code);
+                    IsData = true;
                     _db.SaveChanges();
                     IsData = true;
                 }
@@ -191,9 +191,8 @@ namespace dsapi.Controllers
             try
             {
 
-                if (IsData && codeQueue.Dequeue() == code)
+                if (IsData)
                 {
-                    IsData = false;
                     return Ok(new { code = 222 });
                 }
                 if (IsAds)
