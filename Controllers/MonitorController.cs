@@ -211,9 +211,19 @@ namespace dsapi.Controllers
 
         [AllowAnonymous]
         [HttpGet]
-        public IActionResult Ping()
+        public IActionResult CheckIsUserConnected(string code)
         {
-            return Ok();
+            try
+            {
+                var isConnected = _db.Monitor.Single(m => m.Code == code).UserId != 0;
+                if (isConnected)
+                    return Ok(new { data = 1 });
+                return Ok(new { data = 0 });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
         }
     }
 }
