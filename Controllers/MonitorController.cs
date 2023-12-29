@@ -225,5 +225,22 @@ namespace dsapi.Controllers
                 return BadRequest(ex);
             }
         }
+
+        [AllowAnonymous]
+        [HttpGet]
+        public IActionResult CheckIfDataExist(string code)
+        {
+            try
+            {
+                var exist = _db.MonitorData.Single(m => m.Code == code).Data!=null;
+                if (exist)
+                    return Ok(new { data = 1 });
+                return Ok(new { data = 0 });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
+        }
     }
 }
