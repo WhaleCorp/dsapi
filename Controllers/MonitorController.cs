@@ -195,12 +195,12 @@ namespace dsapi.Controllers
                 {
                     return Ok(new { code = 222 });
                 }
-                if (IsAds)
+                else if (IsAds)
                 {
                     IsAds = false;
                     return Ok(new { code = 111 });
-                }
-                return Ok(new { code = 000 });
+                }else 
+                    return Ok(new { code = 000 });
             }
             catch (Exception ex)
             {
