@@ -99,9 +99,9 @@ namespace dsapi.Controllers
                 {
                     result.Data = data.Data;
                     result.RawData = data.RawData;
-                    IsData = true;
                     codeQueue.Enqueue(data.Code);
                     _db.SaveChanges();
+                    IsData = true;
                 }
                 else
                     return Ok("Monitor doesn't exist");
@@ -192,15 +192,28 @@ namespace dsapi.Controllers
             {
 
                 if (IsData && codeQueue.Dequeue() == code)
+                {
+                    IsData = false;
                     return Ok(new { code = 222 });
+                }
                 if (IsAds)
+                {
+                    IsAds = false;
                     return Ok(new { code = 111 });
+                }
                 return Ok(new { code = 000 });
             }
             catch (Exception ex)
             {
                 return BadRequest(ex);
             }
+        }
+
+        [AllowAnonymous]
+        [HttpGet]
+        public IActionResult Ping()
+        {
+            return Ok();
         }
     }
 }
