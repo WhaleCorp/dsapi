@@ -186,13 +186,14 @@ namespace dsapi.Controllers
 
         [AllowAnonymous]
         [HttpGet]
-        public IActionResult CheckUpdates(string code)
+        public IActionResult CheckUpdates()
         {
             try
             {
 
                 if (IsData)
                 {
+                    IsData = false;
                     return Ok(new { code = 222 });
                 }
                 else if (IsAds)
